@@ -36,7 +36,7 @@ public class PersonController {
 	public PersonVO create(@RequestBody PersonVO person) {
 		return service.create(person);
 	}
-	
+
 	@PutMapping
 	public PersonVO update(@RequestBody PersonVO person) {
 		return service.update(person);
