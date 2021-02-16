@@ -2,7 +2,7 @@ package com.edualpendre.restWithSpring.controller;
 
 import java.util.List;
 
-import com.edualpendre.restWithSpring.data.vo.PersonVO;
+import com.edualpendre.restWithSpring.data.vo.v1.PersonVO;
 import com.edualpendre.restWithSpring.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 public class PersonController {
 	
 	@Autowired

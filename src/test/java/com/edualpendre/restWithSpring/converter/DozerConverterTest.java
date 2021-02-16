@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.edualpendre.restWithSpring.converter.mocks.MockPerson;
 import com.edualpendre.restWithSpring.data.model.Person;
-import com.edualpendre.restWithSpring.data.vo.PersonVO;
+import com.edualpendre.restWithSpring.data.vo.v1.PersonVO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

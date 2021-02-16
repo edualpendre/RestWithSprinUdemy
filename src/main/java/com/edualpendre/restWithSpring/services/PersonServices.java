@@ -1,7 +1,7 @@
 package com.edualpendre.restWithSpring.services;
 
 import com.edualpendre.restWithSpring.converter.DozerConverter;
-import com.edualpendre.restWithSpring.data.vo.PersonVO;
+import com.edualpendre.restWithSpring.data.vo.v1.PersonVO;
 import com.edualpendre.restWithSpring.exception.ResourceNotFoundException;
 import com.edualpendre.restWithSpring.data.model.Person;
 import com.edualpendre.restWithSpring.repository.PersonRepository;

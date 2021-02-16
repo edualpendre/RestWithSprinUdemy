@@ -1,7 +1,7 @@
 package com.edualpendre.restWithSpring.converter.mocks;
 
 import com.edualpendre.restWithSpring.data.model.Person;
-import com.edualpendre.restWithSpring.data.vo.PersonVO;
+import com.edualpendre.restWithSpring.data.vo.v1.PersonVO;
 
 import java.util.ArrayList;
 import java.util.List;
