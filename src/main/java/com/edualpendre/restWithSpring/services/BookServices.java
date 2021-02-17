@@ -6,9 +6,9 @@ import com.edualpendre.restWithSpring.data.vo.v1.BookVO;
 import com.edualpendre.restWithSpring.exception.ResourceNotFoundException;
 import com.edualpendre.restWithSpring.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BookServices {
@@ -22,8 +22,18 @@ public class BookServices {
         return vo;
     }
 
-    public List<BookVO> findAll() {
-        return DozerConverter.parseListObjects(repository.findAll(), BookVO.class);
+    public Page<BookVO> findBookByTitle(String title, Pageable pageable) {
+        var page= repository.findBookByTitle(title, pageable);
+        return page.map(this::convertToBookVO);
+    }
+
+    public Page<BookVO> findAll(Pageable pageable) {
+        var page = repository.findAll(pageable);
+        return page.map(this::convertToBookVO);
+    }
+
+    private BookVO convertToBookVO(Book entity) {
+        return DozerConverter.parseObject(entity, BookVO.class);
     }
 
     public BookVO findById(Long id) {

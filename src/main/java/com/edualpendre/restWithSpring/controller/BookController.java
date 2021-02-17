@@ -5,10 +5,14 @@ import com.edualpendre.restWithSpring.services.BookServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -23,11 +27,45 @@ public class BookController {
 
 	@Operation(summary = "Find a specific book by name" )
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml" })
-	public List<BookVO> findAll() {
-		List<BookVO> books =  service.findAll();
+	public ResponseEntity<CollectionModel<BookVO>> findAll(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "limit", defaultValue = "12") int limit,
+			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
+
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "author"));
+
+		Page<BookVO> books =  service.findAll(pageable);
 		books.stream()
 				.forEach(p -> p.add(linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()));
-		return books;
+
+		Link findAllLink = linkTo(methodOn(BookController.class).findAll(page, limit, direction)).withSelfRel();
+
+		return ResponseEntity.ok(CollectionModel.of(books, findAllLink));
+
+	}
+
+	@Operation(summary = "Find a specific book by title" )
+	@GetMapping(value = "/findBookByTitle/{title}", produces = { "application/json", "application/xml", "application/x-yaml" })
+	public ResponseEntity<CollectionModel<BookVO>> findBookByTitle(
+			@PathVariable("title") String title,
+			@RequestParam(value="page", defaultValue = "0") int page,
+			@RequestParam(value="limit", defaultValue = "12") int limit,
+			@RequestParam(value="direction", defaultValue = "asc") String direction) {
+
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "title"));
+
+		Page<BookVO> books =  service.findBookByTitle(title, pageable);
+		books.stream()
+				.forEach(p -> p.add(
+						linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()
+						)
+				);
+
+		return ResponseEntity.ok(CollectionModel.of(books));
 	}
 
 	@Operation(summary = "Find a specific book by your ID" )
