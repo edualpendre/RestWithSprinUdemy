@@ -59,7 +59,15 @@ public class PersonController {
 		return personVO;
 	}
 
-	@Operation(summary = "Delete a specific person by your ID")
+    @Operation(summary = "Disable a specific person by your ID" )
+    @PatchMapping(path = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
+    public PersonVO disablePerson(@PathVariable("id") Long id) {
+        PersonVO personVO = service.disablePerson(id);
+        personVO.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return personVO;
+    }
+
+    @Operation(summary = "Delete a specific person by your ID")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.delete(id);
