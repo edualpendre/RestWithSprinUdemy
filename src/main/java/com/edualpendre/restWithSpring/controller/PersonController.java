@@ -8,18 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+//@CrossOrigin(origins = "http://localhost:8080")
 @Tag(name = "Person Endpoint")
 @RestController
 @RequestMapping("/api/person/v1")
@@ -28,6 +22,7 @@ public class PersonController {
 	@Autowired
 	private PersonServices service;
 
+	@CrossOrigin(origins = "http://localhost:8080")
 	@Operation(summary = "Find a specific person by name" )
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml" })
 	public List<PersonVO> findAll() {
@@ -37,6 +32,7 @@ public class PersonController {
 		return persons;
 	}
 
+	@CrossOrigin(origins = {"http://localhost:8080", "https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Controle_Acesso_CORS/"})
 	@Operation(summary = "Find a specific person by your ID" )
 	@GetMapping(path = "/{id}", produces = {"application/json", "application/xml", "application/x-yaml"})
 	public PersonVO findById(@PathVariable("id") Long id) {
