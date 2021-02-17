@@ -47,7 +47,7 @@ public class MockBook {
         BookVO book = new BookVO();
         book.setTitle("Title Test" + number);
         book.setPrice(number.doubleValue());
-        book.setLaunch_date(new Date());
+        book.setLaunchDate(new Date());
         book.setKey(number.longValue());
         book.setAuthor("Author Test" + number);
         return book;

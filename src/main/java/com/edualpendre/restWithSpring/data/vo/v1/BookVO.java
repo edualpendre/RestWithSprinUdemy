@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id", "author", "launch_date", "price", "title"})
+@JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
 public class BookVO extends RepresentationModel<BookVO> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
     private Long key;
 
     private String author;
-    private Date launch_date;
+    private Date launchDate;
     private Double price;
     private String title;
 
@@ -43,12 +43,12 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
         this.author = author;
     }
 
-    public Date getLaunch_date() {
-        return launch_date;
+    public Date getLaunchDate() {
+        return launchDate;
     }
 
-    public void setLaunch_date(Date launch_date) {
-        this.launch_date = launch_date;
+    public void setLaunchDate(Date launchDate) {
+        this.launchDate = launchDate;
     }
 
     public Double getPrice() {
@@ -73,11 +73,11 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         BookVO bookVO = (BookVO) o;
-        return Objects.equals(key, bookVO.key) && Objects.equals(author, bookVO.author) && Objects.equals(launch_date, bookVO.launch_date) && Objects.equals(price, bookVO.price) && Objects.equals(title, bookVO.title);
+        return Objects.equals(key, bookVO.key) && Objects.equals(author, bookVO.author) && Objects.equals(launchDate, bookVO.launchDate) && Objects.equals(price, bookVO.price) && Objects.equals(title, bookVO.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), key, author, launch_date, price, title);
+        return Objects.hash(super.hashCode(), key, author, launchDate, price, title);
     }
 }
