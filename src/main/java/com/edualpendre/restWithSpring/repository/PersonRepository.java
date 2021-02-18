@@ -2,7 +2,6 @@ package com.edualpendre.restWithSpring.repository;
 
 
 import com.edualpendre.restWithSpring.data.model.Person;
-import com.edualpendre.restWithSpring.data.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +17,8 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
     @Query("UPDATE Person p SET p.enabled = false WHERE p.id =:id")
     void disablePerson(@Param("id") Long id);
 
-    @Query("SELECT p FROM Person p WHERE p.firstName LIKE LOWER(CONCAT ('%', :firstName, '%'))")
-    Page<Person> findPersonByName(@Param("firstName") String firstName, Pageable pageable);
+    @Query("SELECT p FROM Person p WHERE p.firstName LIKE LOWER(CONCAT ('%', :name, '%'))")
+    Page<Person> findPersonByName(@Param("name") String name, Pageable pageable);
 
+//    Page<Person> findByFirstNameContaining(String firstName, Pageable pageable);
 }

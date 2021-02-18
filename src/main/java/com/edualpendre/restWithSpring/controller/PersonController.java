@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.Link;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,50 +25,73 @@ public class PersonController {
 	private PersonServices service;
 
 	@CrossOrigin(origins = "http://localhost:8080")
-	@Operation(summary = "Find a specific person by name" )
+	@Operation(summary = "Find all people" )
 	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml" })
-	public ResponseEntity<CollectionModel<PersonVO>> findAll(
-	        @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "limit", defaultValue = "12") int limit,
-            @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+	public ResponseEntity findAll(
+			@PageableDefault(sort = "firstName", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable page) {
+		Page<PersonVO> persons = service.findAll(page);
+		persons.forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
 
-	    var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
-
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
-
-		Page<PersonVO> persons =  service.findAll(pageable);
-		persons.stream()
-				.forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
-
-        Link findAllLink = linkTo(methodOn(PersonController.class).findAll(page, limit, direction)).withSelfRel();
-
-		return ResponseEntity.ok(CollectionModel.of(persons, findAllLink));
+		return ResponseEntity.ok(persons);
 	}
+
+//	@CrossOrigin(origins = "http://localhost:8080")
+//	@Operation(summary = "Find all people" )
+//	@GetMapping(produces = {"application/json", "application/xml", "application/x-yaml" })
+//	public ResponseEntity<CollectionModel<PersonVO>> findAll(
+//			@RequestParam(value = "page", defaultValue = "0") int page,
+//			@RequestParam(value = "limit", defaultValue = "12") int limit,
+//			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
+//
+//		var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+//
+//		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+//
+//		Page<PersonVO> persons =  service.findAll(pageable);
+//		persons.stream()
+//				.forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+//
+//		Link findAllLink = linkTo(methodOn(PersonController.class).findAll(page, limit, direction)).withSelfRel();
+//
+//		return ResponseEntity.ok(CollectionModel.of(persons, findAllLink));
+//	}
 
     @Operation(summary = "Find a specific person by name" )
     @GetMapping(value = "/findPersonByName/{firstName}", produces = { "application/json", "application/xml", "application/x-yaml" })
-    public ResponseEntity<CollectionModel<PersonVO>> findPersonByName(
-            @PathVariable("firstName") String firstName,
-            @RequestParam(value="page", defaultValue = "0") int page,
-            @RequestParam(value="limit", defaultValue = "12") int limit,
-            @RequestParam(value="direction", defaultValue = "asc") String direction) {
+    public ResponseEntity findPersonByName(
+    		@PathVariable("firstName") String name,
+			@PageableDefault(sort = "firstName", direction = Sort.Direction.ASC, page = 0, size = 10) Pageable page) {
 
-        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Page<PersonVO> persons =  service.findPersonByName(name, page);
+        persons.stream().forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
 
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
-
-        Page<PersonVO> persons =  service.findPersonByName(firstName, pageable);
-        persons
-                .stream()
-                .forEach(p -> p.add(
-                        linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()
-                        )
-                );
-
-        Link findAllLink = linkTo(methodOn(PersonController.class).findAll(page, limit, direction)).withSelfRel();
-
-        return ResponseEntity.ok(CollectionModel.of(persons, findAllLink));
+        return ResponseEntity.ok(persons);
     }
+
+//	@Operation(summary = "Find a specific person by name" )
+//	@GetMapping(value = "/findPersonByName/{firstName}", produces = { "application/json", "application/xml", "application/x-yaml" })
+//	public ResponseEntity<CollectionModel<PersonVO>> findPersonByName(
+//			@PathVariable("firstName") String firstName,
+//			@RequestParam(value="page", defaultValue = "0") int page,
+//			@RequestParam(value="limit", defaultValue = "12") int limit,
+//			@RequestParam(value="direction", defaultValue = "asc") String direction) {
+//
+//		var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+//
+//		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+//
+//		Page<PersonVO> persons =  service.findPersonByName(firstName, pageable);
+//		persons
+//				.stream()
+//				.forEach(p -> p.add(
+//						linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()
+//						)
+//				);
+//
+//		Link findAllLink = linkTo(methodOn(PersonController.class).findAll(page, limit, direction)).withSelfRel();
+//
+//		return ResponseEntity.ok(CollectionModel.of(persons, findAllLink));
+//	}
 
     @CrossOrigin(origins = {"http://localhost:8080", "https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Controle_Acesso_CORS/"})
 	@Operation(summary = "Find a specific person by your ID" )
